@@ -3,12 +3,12 @@ import asyncio
 import telepot.aio
 
 async def on_chat_message(msg):
- 	command = msg['text']
-	content_type, chat_type, chat_id = telepot.glance(msg)
-	print('Chat:', content_type, chat_type, chat_id)
+    command = msg['text']
+    content_type, chat_type, chat_id = telepot.glance(msg)
+    print('Chat:', content_type, chat_type, chat_id)
 
-	if command == '/roll':
-		bot.sendMessage(chat_id, random.randint(1,6))
+    if command == '/roll':
+        bot.sendMessage(chat_id, random.randint(1,6))
 
 bot = telepot.aio.Bot('302874617:AAEG99KVuWLo3SlN9WVxZTR8s496Ftuylg0')
 answerer = telepot.aio.helper.Answerer(bot)
