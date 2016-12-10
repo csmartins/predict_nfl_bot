@@ -3,6 +3,7 @@ import asyncio
 import telepot.aio
 
 async def on_chat_message(msg):
+ 	command = msg['text']
 	content_type, chat_type, chat_id = telepot.glance(msg)
 	print('Chat:', content_type, chat_type, chat_id)
 
