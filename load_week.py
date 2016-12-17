@@ -14,7 +14,7 @@ def create_week_base_file(week, data):
 
 
 def create_week_files_for_users(week):
-    users_list = ['csmartins', 'douglasrhx', 'lbalabram', 'leozinho420', 'guru_mikonha', 'Carekaled', 'Thiago']
+    users_list = ['csmartins', 'douglasrhx', 'lbalabram', 'leozinho420', 'guru_mikonha', 'Carekaled', 'T_maskot']
 
     create_directory(week)
 
