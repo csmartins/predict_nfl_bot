@@ -13,7 +13,7 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(NFLPredict, self).__init__(*args, **kwargs)
         self.current_season = '2016'
-        self.current_week = 15
+        self.current_week = 16
 
     async def _show_unpredicted_match(self, chat_id, username):
         with open(str(self.current_week) + '/' + username + '.json') as data:
