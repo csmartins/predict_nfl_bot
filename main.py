@@ -72,10 +72,10 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
                     game['predicted'] = True
                     game['predict'] = query_data[1]
 
-        with open(str(self.current_week) + '/' + username + '.json', 'w') as data:
-            json.dump(games, data)
+            with open(str(self.current_week) + '/' + username + '.json', 'w') as data:
+                json.dump(games, data)
 
-        await self._show_unpredicted_match(from_id, username)
+            await self._show_unpredicted_match(from_id, username)
 #
 # def do_main():
 # 	if len(sys.argv) < 2:
@@ -87,7 +87,7 @@ TOKEN = sys.argv[1]
 bot = telepot.aio.DelegatorBot(TOKEN, [
     include_callback_query_chat_id(
         pave_event_space())(
-            per_chat_id(types=['private', 'group']), create_open, NFLPredict, timeout=60)])
+            per_chat_id(types=['private', 'group']), create_open, NFLPredict, timeout=300)])
 
 loop = asyncio.get_event_loop()
 loop.create_task(bot.message_loop())
