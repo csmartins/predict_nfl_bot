@@ -31,17 +31,17 @@ def create_week_files_for_users(week):
 
 
 def do_main():
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print("Missing parameters")
-        print("Expected: python load_week.py <season> <week>")
+        print("Expected: python load_week.py <season> <week> <subscription-key>")
         return
 
     season = sys.argv[1]
     week = sys.argv[2]
-
+    key = sys.argv[3]
     headers = {
         # Request headers
-        'Ocp-Apim-Subscription-Key': '78dc11b4e6294b30a5fd268fc26c3e8c',
+        'Ocp-Apim-Subscription-Key': key,
     }
 
     try:

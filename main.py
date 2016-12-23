@@ -54,8 +54,28 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
         if command == '/predict':
             await self.bot.sendMessage(chat_id, 'WEEK ' + str(self.current_week))
             await self._show_unpredicted_match(chat_id, msg['from']['username'])
+
         if command == '/show':
-            await self._show_users_predictions(chat_id)                
+            await self._show_users_predictions(chat_id)
+
+        if command == '/start':
+            message = 'Esse é o bot pra ajudar nos palpites dos jogos da NFL.\n'
+            message += 'Os jogos são atualizados toda semana usando os dados vindos do Fantasy NFL.\n\n'
+            message += 'Comandos:\n'
+            message += '/start - Inicializa o bot\n'
+            message += '/predict - Mostra jogo por jogo para que o usuário dê seus palpites. Deve ser usado apenas numa conversa privada com o bot\n'
+            message += '/show - Mostra todos os palpites de todos os usuários do grupo\n'
+            message += '/help - Lista os comandos\n\n'
+            message += 'Quer contribuir? https://github.com/csmartins/predict_nfl_bot'
+            await self.bot.sendMessage(chat_id, message)
+
+        if command == '/help':
+            message = 'Comandos:\n'
+            message += '/start - Inicializa o bot\n'
+            message += '/predict - Mostra jogo por jogo para que o usuário dê seus palpites. Deve ser usado apenas numa conversa privada com o bot\n'
+            message += '/show - Mostra todos os palpites de todos os usuários do grupo\n'
+            message += '/help - This\n'
+            await self.bot.sendMessage(chat_id, message)
 
     async def on_callback_query(self, msg):
         query_id, from_id, query_data = glance(msg, flavor='callback_query')
