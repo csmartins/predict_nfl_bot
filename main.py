@@ -66,7 +66,7 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
             message += '/predict - Mostra jogo por jogo para que o usuário dê seus palpites. Deve ser usado apenas numa conversa privada com o bot\n'
             message += '/show - Mostra todos os palpites de todos os usuários do grupo\n'
             message += '/help - Lista os comandos\n\n'
-            message += 'Quer contribuir? https://github.com/csmartins/predict_nfl_bot'
+            message += 'Quer contribuir? https://github.com/csmartins/predict_nfl_bot e fale com @csmartins'
             await self.bot.sendMessage(chat_id, message)
 
         if command == '/help':
