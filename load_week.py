@@ -30,15 +30,36 @@ def create_week_files_for_users(week):
                 json.dump(users_predict, user_games)
 
 
+def create_scores_file(week):
+    create_directory(week)
+
+    scores = []
+    with open(week + '/week-' + week + '.json') as data_file:
+        games = json.load(data_file)
+        for game in games:
+            d = {'GameKey': game['GameKey'], 'AwayScore': game['AwayScore'], 'HomeScore': game['HomeScore']}
+            if game['HomeScore'] != None:
+                if int(game['HomeScore']) > int(game['AwayScore']):
+                    d['Winner'] = game['HomeTeam']
+                else:
+                    d['Winner'] = game['AwayTeam']
+
+            scores.append(d)
+
+    with open(week + '/week-' + week + '-scores.json', 'w') as data:
+        json.dump(scores, data)
+
+
 def do_main():
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 5:
         print("Missing parameters")
-        print("Expected: python load_week.py <season> <week> <subscription-key>")
+        print("Expected: python load_week.py <season> <week> <subscription-key> <param>")
         return
 
     season = sys.argv[1]
     week = sys.argv[2]
     key = sys.argv[3]
+    param = sys.argv[4]
     headers = {
         # Request headers
         'Ocp-Apim-Subscription-Key': key,
@@ -51,8 +72,20 @@ def do_main():
         data = response.read().decode('utf-8')
 
         data = json.loads(data)
-        create_week_base_file(week, data)
-        create_week_files_for_users(week)
+
+        if param == 'all':
+            create_week_base_file(week, data)
+            create_week_files_for_users(week)
+            create_scores_file(week)
+
+        elif param == 'week':
+            create_week_base_file(week, data)
+
+        elif param == 'scores':
+            create_scores_file(week)
+
+        elif param == 'users':
+            create_week_files_for_users(week)
 
         conn.close()
     except Exception as e:
