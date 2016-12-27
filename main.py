@@ -32,17 +32,28 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
         users = os.listdir(str(self.current_week))
         predicts = ''
         for user in users:
-            if user != 'week-16.json':
+            if user != 'week-16.json' and user != 'week-16-scores.json' and user != 'users_scores.json':
+                #print(user)
                 with open(str(self.current_week) + '/' + user) as user_file:
                     user_prediction = json.load(user_file)
                     user_predict = ''
                     for game in user_prediction:
-#                        print(user_predict)
+                        #print(user_predict)
                         user_predict = user_predict + game['AwayTeam'] + ' @ ' + game['HomeTeam'] + ': ' + (game['predict'] if game['predicted'] else 'UNKNOWN ') + '\n'
 
                     username = user.split('.')                
                     predicts = predicts + '@' + username[0] + ' predicts \n' + user_predict + '\n'
         await self.bot.sendMessage(chat_id, 'WEEK ' + str(self.current_week) + ' PREDICTIONS\n' + predicts)
+
+    async def _show_users_scores(self, chat_id):
+        with open(str(self.current_week) + '/users_scores.json') as scores_file:
+            scores = json.load(scores_file)
+            msg = 'WEEK ' + str(self.current_week) + ' USERS SCORES:\n\n'
+            
+            for key in scores.keys():
+                msg += '@' + key + ': ' + str(scores[key]) + '/13\n'
+            
+            await self.bot.sendMessage(chat_id, msg)
 
     async def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
@@ -57,6 +68,9 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
 
         if command == '/show':
             await self._show_users_predictions(chat_id)
+
+        if command == '/scores':
+            await self._show_users_scores(chat_id)
 
         if command == '/start':
             message = 'Esse é o bot pra ajudar nos palpites dos jogos da NFL.\n'
