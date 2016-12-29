@@ -14,7 +14,7 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(NFLPredict, self).__init__(*args, **kwargs)
         self.current_season = '2016'
-        self.current_week = 16
+        self.current_week = 17
 
     async def _show_unpredicted_match(self, chat_id, username):
         with open(str(self.current_week) + '/' + username + '.json') as data:
@@ -46,12 +46,16 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
         await self.bot.sendMessage(chat_id, 'WEEK ' + str(self.current_week) + ' PREDICTIONS\n' + predicts)
 
     async def _show_users_scores(self, chat_id):
+        total_games = 0
+        with open(str(self.current_week) + '/week-' + str(self.current_week) + '.json') as week_file:
+            week = json.load(week_file)
+            total_games = len(week)
         with open(str(self.current_week) + '/users_scores.json') as scores_file:
             scores = json.load(scores_file)
             msg = 'WEEK ' + str(self.current_week) + ' USERS SCORES:\n\n'
             
             for key in scores.keys():
-                msg += '@' + key + ': ' + str(scores[key]) + '/13\n'
+                msg += '@' + key + ': ' + str(scores[key]) + '/' + str(total_games) + '\n'
             
             await self.bot.sendMessage(chat_id, msg)
 

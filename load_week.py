@@ -96,6 +96,7 @@ def do_main():
             create_week_base_file(week, data)
             create_week_files_for_users(week)
             create_scores_file(week)
+            count_scores_by_users(week)
 
         elif param == 'week':
             create_week_base_file(week, data)
