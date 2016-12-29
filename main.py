@@ -22,8 +22,8 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
             for game in week:
                 if not game['predicted']:
                     keyboard = InlineKeyboardMarkup(inline_keyboard=[[
-                        InlineKeyboardButton(text=game['HomeTeam'], callback_data=game['GameKey'] + '-' + game['HomeTeam']),
-                        InlineKeyboardButton(text=game['AwayTeam'], callback_data=game['GameKey'] + '-' + game['AwayTeam']),]])
+                        InlineKeyboardButton(text=game['AwayTeam'], callback_data=game['GameKey'] + '-' + game['AwayTeam']),
+                        InlineKeyboardButton(text=game['HomeTeam'], callback_data=game['GameKey'] + '-' + game['HomeTeam']),]])
                     await self.bot.sendMessage(chat_id, 'Away @ Home', reply_markup=keyboard)
                     return
             await self.bot.sendMessage(chat_id, "You're finished!")
