@@ -32,13 +32,13 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
         users = os.listdir(str(self.current_week))
         predicts = ''
         for user in users:
-            if user != 'week-16.json' and user != 'week-16-scores.json' and user != 'users_scores.json':
+            if 'week-' not in user and user != 'users_scores.json':
                 #print(user)
                 with open(str(self.current_week) + '/' + user) as user_file:
                     user_prediction = json.load(user_file)
                     user_predict = ''
                     for game in user_prediction:
-                        #print(user_predict)
+                        #print(game)
                         user_predict = user_predict + game['AwayTeam'] + ' @ ' + game['HomeTeam'] + ': ' + (game['predict'] if game['predicted'] else 'UNKNOWN ') + '\n'
 
                     username = user.split('.')                
@@ -83,6 +83,7 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
             message += '/start - Inicializa o bot\n'
             message += '/predict - Mostra jogo por jogo para que o usuário dê seus palpites. Deve ser usado apenas numa conversa privada com o bot\n'
             message += '/show - Mostra todos os palpites de todos os usuários do grupo\n'
+            message += '/scores - Mostra quantos palpites cada usuario acertou\n'
             message += '/help - Lista os comandos\n\n'
             message += 'Quer contribuir? https://github.com/csmartins/predict_nfl_bot e fale com @csmartins'
             await self.bot.sendMessage(chat_id, message)
@@ -92,6 +93,7 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
             message += '/start - Inicializa o bot\n'
             message += '/predict - Mostra jogo por jogo para que o usuário dê seus palpites. Deve ser usado apenas numa conversa privada com o bot\n'
             message += '/show - Mostra todos os palpites de todos os usuários do grupo\n'
+            message += '/scores - Mostra quantos palpites cada usuario acertou\n'
             message += '/help - This\n'
             await self.bot.sendMessage(chat_id, message)
 
