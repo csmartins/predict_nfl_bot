@@ -10,6 +10,16 @@ Os jogos são atualizados toda semana usando os dados vindos do Fantasy NFL.
 
 /help - Lista os comandos.
 
+# Build
+
+$ zip deploy.zip 2/ *.py requirements.txt 
+
+Exporte as chaves para variáveis de ambiente.
+
+$ sudo docker build --build-arg telegram_token=$TELEGRAM_TOKEN --build-arg subscription_key=$SUBSCRIPTION_KEY .
+
+
+
 # To Do
 Contar o resultado dos palpites dos usuários;
 
