@@ -2,19 +2,23 @@ import telepot
 import asyncio
 import telepot.aio
 import telepot.aio.helper
-import sys
 import json
 import os
-from telepot import glance, message_identifier
+from telepot import glance
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.aio.delegate import (per_chat_id, create_open, pave_event_space, include_callback_query_chat_id)
+from fantasy import FantasyConnection
+
 
 class NFLPredict(telepot.aio.helper.ChatHandler):
 
     def __init__(self, *args, **kwargs):
         super(NFLPredict, self).__init__(*args, **kwargs)
-        self.current_season = '2016'
-        self.current_week = 17
+
+        fantasy = FantasyConnection()
+
+        self.current_season = fantasy.get_current_season()
+        self.current_week = fantasy.get_current_week()
 
     async def _show_unpredicted_match(self, chat_id, username):
         with open(str(self.current_week) + '/' + username + '.json') as data:
@@ -33,12 +37,10 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
         predicts = ''
         for user in users:
             if 'week-' not in user and user != 'users_scores.json':
-                #print(user)
                 with open(str(self.current_week) + '/' + user) as user_file:
                     user_prediction = json.load(user_file)
                     user_predict = ''
                     for game in user_prediction:
-                        #print(game)
                         user_predict = user_predict + game['AwayTeam'] + ' @ ' + game['HomeTeam'] + ': ' + (game['predict'] if game['predicted'] else 'UNKNOWN ') + '\n'
 
                     username = user.split('.')                
@@ -46,7 +48,6 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
         await self.bot.sendMessage(chat_id, 'WEEK ' + str(self.current_week) + ' PREDICTIONS\n' + predicts)
 
     async def _show_users_scores(self, chat_id):
-        total_games = 0
         with open(str(self.current_week) + '/week-' + str(self.current_week) + '.json') as week_file:
             week = json.load(week_file)
             total_games = len(week)
@@ -100,7 +101,6 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
     async def on_callback_query(self, msg):
         query_id, from_id, query_data = glance(msg, flavor='callback_query')
         username = msg['from']['username']
-        games = []
 
         with open(str(self.current_week) + '/' + username + '.json', 'r') as data:
             games = json.load(data)
@@ -116,14 +116,9 @@ class NFLPredict(telepot.aio.helper.ChatHandler):
                 json.dump(games, data)
 
             await self._show_unpredicted_match(from_id, username)
-#
-# def do_main():
-# 	if len(sys.argv) < 2:
-# 		print("Insuficient number of arguments.")
-# 		print("Expected: python main.py <TOKEN>")
-# 		return
 
-TOKEN = sys.argv[1]
+TOKEN = os.environ['TELEGRAM_TOKEN']
+
 bot = telepot.aio.DelegatorBot(TOKEN, [
     include_callback_query_chat_id(
         pave_event_space())(
@@ -134,6 +129,3 @@ loop.create_task(bot.message_loop())
 
 print("Listening...")
 loop.run_forever()
-
-# if __name__ == "__main__":
-#     do_main()

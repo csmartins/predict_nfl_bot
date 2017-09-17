@@ -1,4 +1,5 @@
-import http.client, urllib.error, sys, urllib.parse, json, os
+import sys, json, os
+from fantasy import FantasyConnection
 
 users_list = ['csmartins', 'douglasrhx', 'lbalabram', 'leozinho420', 'guru_mikonha', 'Carekaled', 'T_maskot']
 
@@ -38,7 +39,7 @@ def create_scores_file(week):
         games = json.load(data_file)
         for game in games:
             d = {'AwayScore': game['AwayScore'], 'HomeScore': game['HomeScore']}
-            if game['HomeScore'] != None:
+            if game['HomeScore'] is not None:
                 if int(game['HomeScore']) > int(game['AwayScore']):
                     d['Winner'] = game['HomeTeam']
                 else:
@@ -70,27 +71,18 @@ def count_scores_by_users(week):
 
 
 def do_main():
-    if len(sys.argv) < 5:
+    if len(sys.argv) < 4:
         print("Missing parameters")
-        print("Expected: python load_week.py <season> <week> <subscription-key> <param>")
+        print("Expected: python load_week.py <season> <week> <param>")
         return
 
     season = sys.argv[1]
     week = sys.argv[2]
-    key = sys.argv[3]
-    param = sys.argv[4]
-    headers = {
-        # Request headers
-        'Ocp-Apim-Subscription-Key': key,
-    }
+    param = sys.argv[3]
 
     try:
-        conn = http.client.HTTPSConnection('api.fantasydata.net')
-        conn.request("GET", "/v3/nfl/scores/JSON/ScoresByWeek/{}/{}?%s".format(season, week), "", headers)
-        response = conn.getresponse()
-        data = response.read().decode('utf-8')
-
-        data = json.loads(data)
+        fantasy = FantasyConnection()
+        data = fantasy.get_scores_by_week(season, week)
 
         if param == 'all':
             create_week_base_file(week, data)
@@ -109,7 +101,6 @@ def do_main():
         elif param == 'users':
             create_week_files_for_users(week)
 
-        conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
